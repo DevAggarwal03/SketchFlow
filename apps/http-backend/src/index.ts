@@ -56,7 +56,6 @@ app.post('/signIn', async (req, res) => {
             return;
         }
     
-        const userId = userDetails.id;
         const payload : jwtContent = {
             userId: userDetails.id,
             username: username
@@ -76,13 +75,64 @@ app.post('/signIn', async (req, res) => {
     }
 })
 
+app.get('/chats/:roomId', async (req, res) => {
+    const parsedParams = req.params;
+
+    try {
+        const chats = await prisma.chat.findMany({
+            where: {
+                roomId: parsedParams.roomId
+            },
+            orderBy: {
+                id: "desc"
+            },
+            take: 50
+        }) 
+
+        res.status(202).json({
+            success: true,
+            roomId: parsedParams.roomId,
+            chats
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error
+        }) 
+    }
+})
+
+app.get('/room/:slug', async (req, res) => {
+    const {slug} = req.params
+
+    try {
+        const room = await prisma.room.findFirst({
+            where: {
+                id: slug
+            }
+        }) 
+
+        res.status(202).json({
+            success: true,
+            slug,
+            room
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error
+        })
+    }
+})
+
 app.post('/createRoom', middleware, async (req, res) => {
     const uuid = uuidv4(); 
+    // name -> slug
     const {name} = req.body
     try {
         if(req.userId == undefined){
             res.status(402).json({
-                message: "something went wrong" 
+                message: "user not found" 
             })
             return;
         }
@@ -96,9 +146,10 @@ app.post('/createRoom', middleware, async (req, res) => {
         console.log(result);
         res.json({
             message: "room created",
-            roomId: uuid,
-            userId: req.userId,
-            slug: name
+            roomId: result.id,
+            userId: result.adminId,
+            createdAt: result.createdAt,
+            slug: result.slug 
         })
     } catch (error) {
         res.status(402).json({
@@ -107,6 +158,6 @@ app.post('/createRoom', middleware, async (req, res) => {
     }
 })
 
-const PORT = 8080;
+const PORT = 3021;
 
 app.listen(PORT);

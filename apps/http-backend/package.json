@@ -12,7 +12,7 @@
     "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "jsonwebtoken": "^9.0.2"
-  },
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
