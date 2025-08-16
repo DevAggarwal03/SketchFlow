@@ -3,7 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import { jwtContent } from '@repo/types';
 
 export const middleware = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers["authorization"] ?? "";
+    const token = req.headers["authorization"]?.split(" ")[1] ?? "";
+    console.log(token);
 
     const decoded = jwt.verify(token, 'SECRET');
 
@@ -12,6 +13,7 @@ export const middleware = (req: Request, res: Response, next: NextFunction) => {
             return;
         }
         req.userId = decoded.userId;
+        console.log(req.userId);
         next();
     }else{
         res.status(403).json({

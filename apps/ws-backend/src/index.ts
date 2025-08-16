@@ -27,13 +27,16 @@ const verfiyUser = (token: string, ws: WebSocket) => {
     } 
 }
 
-const broadcast = (msg: string, roomId: string, senderWs: WebSocket) => {
+const broadcast = async (msg: string, roomId: string, senderWs: WebSocket) => {
     const isJoined = roomConnection.get(roomId)?.filter((socket) => socket == senderWs);
     if(isJoined?.length == 0){
         return;
     }
+    console.log(roomConnection);
     roomConnection.get(roomId)?.forEach((socket) => {
+        console.log("notSent");
         if(socket && socket != senderWs){
+            console.log("sent");
             socket.send(msg);
         }
     })
@@ -51,17 +54,18 @@ wss.on('connection', (ws: WebSocket, request) => {
     ws.on('message', async(msg: string) => {
         const content: contentInterface = JSON.parse(msg);
         if(content.type == "join"){
+            console.log(userId, "joined room", content);
             const arr: WebSocket[] | [] = roomConnection.get(content.room) ?? [];
             roomConnection.set(content.room, [...arr, ws]);
             return;
         }
         if(content.type == "chat"){
-            broadcast(content.message || "", content.room, ws);
+            await broadcast(content.message || "", content.room, ws);
             await prisma.chat.create({
                 data: {
                     message: content.message ?? "",
                     roomId: content.room,
-                    senderId: content.userId,
+                    senderId: parseInt(userId),
                 }
             })
             return;

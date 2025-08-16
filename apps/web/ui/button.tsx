@@ -1,22 +1,24 @@
 "use client";
 
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
-type Variant = 'primary' | "secondary"
 
 interface buttonProps {
-  variant: Variant,
-  classname: string,
-  children: ReactNode,
-  onClick? : () => void
+  variant: 'primary' | "secondary",
+  className?: string,
+  children?: ReactNode,
+  onClick? : (e: React.MouseEvent) => void
 }
 
 
 
-export const Button = ({ variant = 'primary', className = '', children, onClick }: any) => {
+export const Button = ({ variant = 'primary', className = '', children, onClick }: buttonProps) => {
   const baseClasses = "inline-flex items-center justify-center px-6 py-3 font-semibold text-base rounded-lg shadow-sm transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2";
 
-  const variantClasses: Record<Variant, string> = {
+  const variantClasses: {
+    primary: string,
+    secondary: string
+  } = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
     secondary: "bg-white text-gray-800 border border-gray-300 hover:bg-gray-100 focus:ring-gray-400",
   };

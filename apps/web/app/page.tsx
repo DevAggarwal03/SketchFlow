@@ -1,101 +1,86 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
-
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
-
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
-  return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
+import { Button } from "@/ui/button";
+import FeatureCard from "@/components/FeatureCard";
+import { Header } from "@/components/Header";
+import { PenToolIcon, ShareIcon, UsersIcon } from "@/components/icons";
+import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
+      <Header />
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turborepo.com/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
+      <main>
+        {/* Hero Section */}
+        <section className="relative pt-32 pb-20 md:pt-40 md:pb-24 text-center">
+          <div className="container mx-auto px-4">
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter text-gray-900 mb-4">
+              Collaborate and Create, Instantly.
+            </h1>
+            <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-600 mb-8">
+              SketchFlow is a minimalist, real-time collaborative whiteboard.
+              Perfect for brainstorming, planning, and bringing your ideas to life with your team.
+            </p>
+            <div className="flex justify-center space-x-4">
+              <Button variant="primary" className="px-8 py-4 text-lg">
+                Start Drawing for Free
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Product Visual Section */}
+        <section className="pb-20 md:pb-24">
+          <div className="container mx-auto px-4">
+            <div className="relative mx-auto max-w-5xl h-[300px] md:h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+              {/* This is a mock UI to represent the application */}
+              <div className="absolute top-0 left-0 h-12 w-full bg-gray-100 border-b border-gray-200 flex items-center px-4 space-x-2">
+                <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+              </div>
+              <div className="p-16">
+                 {/* Mock content inside the canvas */}
+                 <div className="absolute top-20 left-24 w-40 h-24 bg-blue-200 border-2 border-blue-400 rounded-lg transform -rotate-3"></div>
+                 <div className="absolute top-40 right-32 w-32 h-32 bg-yellow-200 border-2 border-yellow-400 rounded-full"></div>
+                 <p className="absolute bottom-20 left-1/2 -translate-x-1/2 text-gray-400 font-medium text-2xl">Your next big idea starts here.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="bg-white py-20 md:py-24">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Everything You Need to Collaborate</h2>
+              <p className="mt-4 text-lg text-gray-600">Simple tools, powerful results.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <FeatureCard
+                icon={<PenToolIcon className="w-7 h-7" />}
+                title="Intuitive Drawing Tools"
+                description="Effortlessly sketch, write, and diagram with a clean and simple set of tools. No distractions, just pure creativity."
+              />
+              <FeatureCard
+                icon={<UsersIcon className="w-7 h-7" />}
+                title="Real-Time Collaboration"
+                description="Invite your team and see their cursors move in real-time. Brainstorm together as if you were in the same room."
+              />
+              <FeatureCard
+                icon={<ShareIcon className="w-7 h-7" />}
+                title="Easy Sharing"
+                description="Share your canvas with a single link. Export your creations as high-quality images to use anywhere."
+              />
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turborepo.com?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turborepo.com →
-        </a>
+
+      {/* Footer */}
+      <footer className="bg-gray-50 py-8">
+        <div className="container mx-auto px-4 text-center text-gray-500">
+          <p>&copy; {new Date().getFullYear()} SketchFlow. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   );
