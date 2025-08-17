@@ -60,7 +60,15 @@ wss.on('connection', (ws: WebSocket, request) => {
             return;
         }
         if(content.type == "chat"){
+            if(content.message == undefined){
+                return;
+            }
             await broadcast(content.message || "", content.room, ws);
+            const msg = JSON.parse(content.message);
+            if(msg.type == 'mouseMove'){
+                return;
+            }
+            
             await prisma.chat.create({
                 data: {
                     message: content.message ?? "",

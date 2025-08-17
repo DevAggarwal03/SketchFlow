@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation";
 import { canvasCircle } from "@/draw/canvasCirc";
 
-export type shapeType = "rect" | "circle"
+export type shapeType = "rect" | "circle" | "pencil"
 
 export default function Canvas({roomId}: {roomId: string}) {
 
@@ -22,8 +22,11 @@ export default function Canvas({roomId}: {roomId: string}) {
         if(id == '1'){
             setShape('rect');
             return;
+        }else if(id == '2'){
+            setShape('circle');
+            return;
         }
-        setShape('circle');
+        setShape('pencil');
         return;
     }
 
@@ -55,9 +58,10 @@ export default function Canvas({roomId}: {roomId: string}) {
     return <>
         <canvas ref={canvasRef} height={800} width={1450}></canvas>
         {
-            websocket && <div className="absolute bg-white rounded-lg px-1 py-2 flex gap-y-2 flex-col left-2 bottom-[50%] translate-y-[50%] text-lg">
-                <div onClick={changeShapeType} id="1">◾️</div>
+            websocket && <div className="absolute bg-white rounded-lg px-1 py-2 flex justify-center items-center gap-y-2 flex-col left-2 bottom-[50%] translate-y-[50%] text-lg">
+                <div onClick={changeShapeType} className="text-2xl" id="1">◾️</div>
                 <div onClick={changeShapeType} id="2">⚫️</div>
+                <div onClick={changeShapeType} className="text-xl text-black" id="3">✐</div>
             </div>
         }
         {
