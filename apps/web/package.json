@@ -16,6 +16,7 @@
     "recoil": "^0.7.7"
   },
   "devDependencies": {
+    "@repo/types": "workspace:*",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

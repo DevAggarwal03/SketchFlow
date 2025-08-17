@@ -3,8 +3,8 @@
 import { useSocket } from "@/hooks/useSocket";
 import { canvasRect } from "../draw/canvasRect";
 import React, { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation";
-import { canvasCircle } from "@/draw/canvasCirc";
+import axios from "axios";
+import { http_url } from "@/config";
 
 export type shapeType = "rect" | "circle" | "pencil"
 
@@ -12,9 +12,12 @@ export default function Canvas({roomId}: {roomId: string}) {
 
     const [websocket, setWebsocket] = useState<WebSocket | undefined>(undefined);
     const [shape, setShape] = useState<shapeType>("rect");
+    const [username, setUsername] = useState<string>('Anonymous');
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const shapeRef = useRef(shape);
     const socket = useSocket();
+    const usernameRef = useRef<string>("Anonymous");
+    const httpUrl = http_url;
 
     const changeShapeType = (e: any) => {
         const {id} = e.target;
@@ -30,9 +33,31 @@ export default function Canvas({roomId}: {roomId: string}) {
         return;
     }
 
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        try {
+            axios.post(`${httpUrl}/user`,{},{
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            }).then(res => {
+                console.log(res.data.username);
+                setUsername(res.data.username);
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        return;
+    }, [])
+
     useEffect(() => {
         shapeRef.current = shape;
     }, [shape]) 
+
+    useEffect(() => {
+        usernameRef.current = username;
+    }, [username]) 
 
     useEffect(() => {
         if(!socket || socket == null || socket == undefined){
@@ -50,7 +75,7 @@ export default function Canvas({roomId}: {roomId: string}) {
 
     useEffect(() => {
         if(canvasRef.current && websocket){
-            canvasRect(canvasRef.current, roomId, websocket, shapeRef);
+            canvasRect(canvasRef.current, roomId, websocket, shapeRef, usernameRef);
         }
 
     }, [canvasRef, websocket, roomId])

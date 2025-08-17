@@ -4,6 +4,7 @@ import { http_url } from "@/config";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input"
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react"
 
 
@@ -13,6 +14,8 @@ export default function CredentialBox({
     isSignIn: boolean
 }){
     const [details, setDetails] = useState({username: "", password: ""});
+    const router = useRouter();
+
     const inputHandeler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setDetails(prev => ({
@@ -31,7 +34,16 @@ export default function CredentialBox({
                 password: details.password
             })
             if(response.data.success){
-                localStorage.setItem("token", response.data.token);
+                if(response.data.token){
+                    localStorage.setItem("token", response.data.token);
+                    router.push(`/dashboard/${response.data.userId}`)
+                }else{
+                    alert('singIn again!')
+                    router.push('/signIn')
+                }
+                console.log(response.data.userId);
+            }else{
+                alert(response.data.message);
             }
             return;
         } catch (error) {

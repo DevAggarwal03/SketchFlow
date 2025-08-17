@@ -100,7 +100,7 @@ export const populateCursors = (ctx: CanvasRenderingContext2D, canvas: HTMLCanva
 
         ctx.fillStyle = 'green'
         ctx.font = 'bold 18px "Times-Roman"'
-        ctx.fillText(key, value.x - 20, value.y + 32, 130);
+        ctx.fillText(key, value.x - 20, value.y + 40, 130);
         ctx.fill();
     })
 

@@ -13,5 +13,5 @@ export default async function DashboardPage({params}: {
     add logic to get all the details of the user
 */
     const userId = (await params).userId;
-    return <Dashboard/> 
+    return <Dashboard userId={userId}/> 
 }

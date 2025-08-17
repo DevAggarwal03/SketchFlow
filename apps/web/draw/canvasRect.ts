@@ -2,7 +2,7 @@ import { shapeType } from "@/components/Canvas";
 import { clearCanvas, cursor, getExistingShapes, populateCursors, shape } from "./utils";
 
 
-export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket | undefined, shapeRef: React.RefObject<shapeType>) {
+export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket | undefined, shapeRef: React.RefObject<shapeType>, usernameRef: React.RefObject<string>) {
 
     const ctx = canvas.getContext('2d');
     if(!ctx || !socket){
@@ -16,7 +16,7 @@ export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, sock
     socket.onmessage = (ev: MessageEvent<any>) => {
         const data = JSON.parse(ev.data)
         if(data.type == 'mouseMove'){
-            cursors.set(data.userId, data.cursor);
+            cursors.set(data.username, data.cursor);
         }else{
             existingShapes.push(data)
         }
@@ -102,7 +102,7 @@ export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, sock
                 y: e.clientY
             },
             //for now hardcoding the user id field
-            userId: "123"
+            username: usernameRef.current
         }
         socket.send(JSON.stringify({
             type: 'chat',
