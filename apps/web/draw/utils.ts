@@ -9,7 +9,7 @@ export type shape = {
 } | {
     type: "circle",
     center: {x: number, y: number},
-    dimensions: {r: number}
+    dimensions: {a: number, b: number}
 } | {
     type: 'pencil',
     start: {
@@ -39,7 +39,8 @@ export const clearCanvas = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasEle
         }else if(shape.type == 'circle'){
             ctx.beginPath();
             ctx.strokeStyle = "white"
-            ctx.arc(shape.center.x, shape.center.y, shape.dimensions.r, 0, 2*Math.PI);
+            // ctx.arc(shape.center.x, shape.center.y, shape.dimensions.r, 0, 2*Math.PI);
+            ctx.ellipse(shape.center.x, shape.center.y, Math.abs(shape.dimensions.a), Math.abs(shape.dimensions.b), 0, 0, 2*Math.PI);
             ctx.stroke();
         }else{
             ctx.beginPath();
@@ -75,7 +76,6 @@ export const getExistingShapes = async (roomId: string) => {
                 shapes.push(JSON.parse(chat.message))
             }
         })
-        console.log(shapes);
         return shapes       
     } catch (error) {
         

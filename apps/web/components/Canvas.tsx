@@ -81,12 +81,12 @@ export default function Canvas({roomId}: {roomId: string}) {
     }, [canvasRef, websocket, roomId])
 
     return <>
-        <canvas ref={canvasRef} height={800} width={1450}></canvas>
+        <canvas ref={canvasRef} className={`${shape == 'pencil' ? "cursor-pointer" : ""} `} height={window.innerHeight} width={window.innerWidth}></canvas>
         {
-            websocket && <div className="absolute bg-white rounded-lg px-1 py-2 flex justify-center items-center gap-y-2 flex-col left-2 bottom-[50%] translate-y-[50%] text-lg">
-                <div onClick={changeShapeType} className="text-2xl" id="1">◾️</div>
-                <div onClick={changeShapeType} id="2">⚫️</div>
-                <div onClick={changeShapeType} className="text-xl text-black" id="3">✐</div>
+            websocket && <div className="fixed bg-white rounded-lg px-1 py-2 flex justify-center items-center gap-y-2 gap-x-4 left-[50%] top-2 translate-x-[-50%] text-lg">
+                <div onClick={changeShapeType} className="text-2xl cursor-pointer" id="1">◾️</div>
+                <div onClick={changeShapeType} id="2" className="cursor-pointer">⚫️</div>
+                <div onClick={changeShapeType} className="text-xl text-black cursor-pointer" id="3">✐</div>
             </div>
         }
         {

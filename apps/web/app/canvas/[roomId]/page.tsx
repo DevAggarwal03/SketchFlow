@@ -6,8 +6,8 @@ export default async function canvasPage({params}: {
         roomId: string
     }
 }) {
-
-    const roomId = (await params).roomId;
+    //@ts-ignore
+    const roomId = (params).roomId;
 
     return <div>
         <Canvas roomId={roomId}/>

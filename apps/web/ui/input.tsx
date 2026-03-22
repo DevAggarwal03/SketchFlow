@@ -9,10 +9,11 @@ interface InputProps {
     size: "md" | "lg",
     value: string,
     type: string,
-    id: string
+    id: string,
+    placeholder: string
 }
 
-export const Input = ({variant, className, size, onChange, value, name, type, id} : InputProps) => {
+export const Input = ({variant, className, placeholder, size, onChange, value, name, type, id} : InputProps) => {
     const variantClasses: {
         primary: string,
         secondary: string
@@ -34,6 +35,7 @@ export const Input = ({variant, className, size, onChange, value, name, type, id
     onChange={onChange}
     value={value}
     id={id}
+    placeholder={placeholder}
     name={name}
     type={type}
     />

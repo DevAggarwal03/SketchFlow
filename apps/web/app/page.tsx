@@ -2,7 +2,7 @@ import { Button } from "@/ui/button";
 import FeatureCard from "@/components/FeatureCard";
 import { Header } from "@/components/Header";
 import { PenToolIcon, ShareIcon, UsersIcon } from "@/components/icons";
-import Image from "next/image";
+// import Image from "next/image";
 
 export default function Home() {
   return (

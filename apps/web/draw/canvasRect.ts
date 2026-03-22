@@ -30,27 +30,43 @@ export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, sock
     let clicked = false;
 
     let start: {x: number, y: number} = {x: 0, y:0};
+    // const dx = 5;
+    // const dy = 4;
+    // const mouseScroll = (ev: WheelEvent) => {
+    //     console.log(ev);
+    //     if(ev.shiftKey){
+    //         if(ev.deltaY > 0 || ev.deltaX > 0){
+    //             canvas.width += dx;
+    //             canvas.height += dy; 
+    //             // ctx.transform()
+    //             clearCanvas(ctx, canvas, existingShapes, linePoints);
+    //             populateCursors(ctx, canvas, cursors);
+    //         }else if(ev.deltaY < 0 || ev.deltaX < 0){
+    //             canvas.width -= dx;
+    //             canvas.height -= dy; 
+    //             clearCanvas(ctx, canvas, existingShapes, linePoints);
+    //             populateCursors(ctx, canvas, cursors);
+    //         }
+    //     }
+    // }
 
     const handeDown = (e: MouseEvent) => {
         clicked = true;
-        start.x = e.clientX;
-        start.y = e.clientY;
+        start.x = e.pageX;
+        start.y = e.pageY;
         if(shapeRef.current == 'pencil'){
             linePoints.push({x: start.x, y: start.y});
-            // ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(e.clientX, e.clientY)
+            ctx.moveTo(e.pageX, e.pageY)
         }
-        console.log(shapeRef.current);
-        
     }
 
     const handeup = (e: any) => {
         clicked = false;
         let msg: shape | {} = {};
         if(shapeRef.current == 'rect'){
-            const width = e.clientX - start.x;
-            const height = e.clientY - start.y;
+            const width = e.pageX - start.x;
+            const height = e.pageY - start.y;
             msg = {
                 type: 'rect',
                 start: {
@@ -63,16 +79,18 @@ export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, sock
                 }
             }
         }else if(shapeRef.current == 'circle'){
-            const radius = (Math.sqrt(Math.pow((e.clientX - start.x), 2) + Math.pow((e.clientY - start.y), 2)))/2
-            // console.log("radius: ", radius)
+            // const radius = (Math.sqrt(Math.pow((e.pageX - start.x), 2) + Math.pow((e.pageY - start.y), 2)))/2
+            const a = e.pageX - start.x;
+            const b = e.pageY - start.y;
             msg = {
                 type: 'circle',
                 center: {
-                    x: start.x + ((e.clientX - start.x)/2),
-                    y: start.y + ((e.clientY - start.y)/2),
+                    x: start.x,
+                    y: start.y,
                 },
                 dimensions: {
-                    r: radius 
+                    a: a,
+                    b: b 
                 }
             }
         }else{
@@ -98,8 +116,8 @@ export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, sock
         const mouseInfo = {
             type: 'mouseMove',
             cursor: {
-                x: e.clientX,
-                y: e.clientY
+                x: e.pageX,
+                y: e.pageY
             },
             //for now hardcoding the user id field
             username: usernameRef.current
@@ -111,8 +129,8 @@ export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, sock
         }))
         if(clicked){
             if(shapeRef.current == 'rect'){
-                const height = e.clientY - start.y;
-                const width = e.clientX - start.x;
+                const height = e.pageY - start.y;
+                const width = e.pageX - start.x;
 
                 clearCanvas(ctx, canvas, existingShapes, linePoints);
                 populateCursors(ctx, canvas, cursors);
@@ -120,23 +138,26 @@ export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, sock
                 ctx.strokeStyle = "white";
                 ctx.strokeRect(start.x, start.y, width, height);
             }else if(shapeRef.current == 'circle'){
-                const center :{x: number, y: number} = {x : start.x + ((e.clientX - start.x)/2), y: start.y + ((e.clientY - start.y)/2)}; 
-                const radius = (Math.sqrt(Math.pow((e.clientX - start.x), 2) + Math.pow((e.clientY - start.y), 2)))/2
+                // const center :{x: number, y: number} = {x : start.x + ((e.pageX - start.x)/2), y: start.y + ((e.pageY - start.y)/2)}; 
+                const center: {x: number, y: number} = {x: start.x, y: start.y};
+                // const radius = (Math.sqrt(Math.pow((e.pageX - start.x), 2) + Math.pow((e.pageY - start.y), 2)))/2
+                const radius = (Math.sqrt(Math.pow((e.pageX - start.x), 2) + Math.pow((e.pageY - start.y), 2)));
+                const a = e.pageX - start.x;
+                const b = e.pageY - start.y;
 
                 clearCanvas(ctx, canvas, existingShapes, linePoints);
                 populateCursors(ctx, canvas, cursors);
                 
-                console.log(center)
                 ctx.beginPath();
                 ctx.strokeStyle = "white";
-                ctx.arc(center.x, center.y, radius, 0, 2*Math.PI);
+                // ctx.arc(center.x, center.y, radius, 0, 2*Math.PI);
+                ctx.ellipse(center.x, center.y, Math.abs(a), Math.abs(b), 0, 0, 2*Math.PI);
                 ctx.stroke();
             }else{
-                const x = e.clientX;
-                const y = e.clientY;
+                const x = e.pageX;
+                const y = e.pageY;
                 const prevX = linePoints[linePoints.length - 1] ? linePoints[linePoints.length - 1].x : start.x;
                 const prevY = linePoints[linePoints.length - 1] ? linePoints[linePoints.length - 1].y : start.y;
-                console.log(prevX, prevY)
                 
                 clearCanvas(ctx, canvas, existingShapes, linePoints);
                 populateCursors(ctx, canvas, cursors);
@@ -152,15 +173,14 @@ export async function canvasRect(canvas: HTMLCanvasElement, roomId: string, sock
     }
 
     canvas.addEventListener('mousedown', handeDown)
-
     canvas.addEventListener('mouseup', handeup)
-
     canvas.addEventListener('mousemove', handeMove)
-
+    // canvas.addEventListener('wheel', mouseScroll)
 
     return () => {
         canvas.removeEventListener('mousedown', handeDown)
         canvas.removeEventListener('mouseup', handeup)
         canvas.removeEventListener('mousemove', handeMove)
+        // canvas.addEventListener('wheel', mouseScroll)
     } 
 }
